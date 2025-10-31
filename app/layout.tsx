@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FinPulse AI",
+  title: "FinPulse AI- Your Daily Dose of Financial Intelligence",
   description:
     "Track real-time stock prices, get personalized alerts and explore detailed AI insights",
 };
