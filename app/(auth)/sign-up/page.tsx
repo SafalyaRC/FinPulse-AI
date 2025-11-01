@@ -32,13 +32,20 @@ const SignUp = () => {
       investmentGoals: "Growth",
       riskTolerance: "Medium",
       preferredIndustry: "Technology",
-    },
+    } as SignUpFormData,
     mode: "onBlur",
   });
   const onSubmit = async (data: SignUpFormData) => {
     try {
       const result = await signUpWithEmail(data);
-      if (result.success) router.push("/");
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to create account");
+      }
+
+      toast.success("Account created successfully!");
+      // Force a hard navigation to ensure auth state is fresh
+      window.location.href = "/";
     } catch (e) {
       console.error(e);
       toast.error("Sign-up failed", {
@@ -54,7 +61,7 @@ const SignUp = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <InputField
-          name="fullname"
+          name="fullName"
           label="Full Name"
           placeholder="Enter your name"
           register={register}

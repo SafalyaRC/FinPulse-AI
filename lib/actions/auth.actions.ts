@@ -19,7 +19,12 @@ export const signUpWithEmail = async ({
       body: { email, password, name: fullName },
     });
 
-    if (response) {
+    if (!response) {
+      throw new Error("No response from authentication server");
+    }
+
+    try {
+      // Try to send Inngest event but don't block signup if it fails
       await inngest.send({
         name: "app/user.created",
         data: {
@@ -31,11 +36,17 @@ export const signUpWithEmail = async ({
           preferredIndustry,
         },
       });
+    } catch (inngestError) {
+      // Log but don't fail the signup
+      console.warn("Failed to send user creation event:", inngestError);
     }
+
     return { success: true, data: response };
   } catch (error) {
-    console.log("Signup failed", error);
-    return { success: false, error: "Sign up failed" };
+    console.error("Signup failed:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Sign up failed";
+    return { success: false, error: errorMessage };
   }
 };
 
