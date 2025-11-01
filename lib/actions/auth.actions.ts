@@ -2,8 +2,8 @@
 
 import { success } from "better-auth";
 import { auth } from "../better-auth/auth";
-import { inngest } from "../inngest/client";
 import { headers } from "next/headers";
+import { sendWelcomeEmail } from "../nodemailer";
 
 export const signUpWithEmail = async ({
   email,
@@ -24,21 +24,25 @@ export const signUpWithEmail = async ({
     }
 
     try {
-      // Try to send Inngest event but don't block signup if it fails
-      await inngest.send({
-        name: "app/user.created",
-        data: {
-          email,
-          name: fullName,
-          country,
-          investmentGoals,
-          riskTolerance,
-          preferredIndustry,
-        },
+      // Send welcome email directly
+      await sendWelcomeEmail({
+        email,
+        name: fullName,
+        intro: `
+          <p class="mobile-text dark-text-secondary" style="margin: 0 0 30px 0; font-size: 16px; line-height: 1.6; color: #CCDADC;">
+            Welcome to FinPulse-AI! We're excited to help you stay on top of market movements and make informed investment decisions. Your account is now ready with the following preferences:
+            <br><br>
+            • Investment Goals: ${investmentGoals}
+            <br>
+            • Risk Tolerance: ${riskTolerance}
+            <br>
+            • Preferred Industry: ${preferredIndustry}
+          </p>
+        `,
       });
-    } catch (inngestError) {
-      // Log but don't fail the signup
-      console.warn("Failed to send user creation event:", inngestError);
+    } catch (emailError) {
+      // Log but don't fail signup if email fails
+      console.error("Failed to send welcome email:", emailError);
     }
 
     return { success: true, data: response };
