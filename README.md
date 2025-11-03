@@ -245,8 +245,8 @@ FinPulse AI
 ## 👨‍💻 Developer
 
 - Safalya RC — Full-stack Engineer, focused on AI-driven systems, intelligent automation, and high-performance applications.
-- [LinkedIn][https://www.linkedin.com/in/safalyarc/]
-- [Email][safalyaroy9463@gmail.com]
+- [LinkedIn](https://www.linkedin.com/in/safalyarc/)
+- [Email](safalyaroy9463@gmail.com)
 
 ---
 
